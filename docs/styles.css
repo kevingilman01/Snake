@@ -25,3 +25,7 @@
     background-color: purple;
     font-weight: 900;
 }
+
+#gameOverScreen {
+    display: none;
+}

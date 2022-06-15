@@ -46,6 +46,19 @@ $(function() {
         $("#selectionMenu").css("display", "none");
     });
 
+    $("#playAgainButton").on("click", function() {
+        $("#selectionMenu").css("display", "block");
+        $("#gameOverScreen").css("display", "none");
+        score = 0;
+        $("#score").text(score);
+        snake = [
+            {x:50, y:100, oldX:0, oldY:0},
+            {x:50, y:90, oldX:0, oldY:0},
+            {x:50, y:80, oldX:0, oldY:0},
+        ];
+        keyPressed = DOWN;
+    });
+
     function gameLoop() {
         clearCanvas();
         drawFood();
@@ -188,6 +201,6 @@ $(function() {
 
     function gameOver() {
         clearInterval(game);
-        alert("Game Over");
+        $("#gameOverScreen").css("display", "block");
     }
 })
