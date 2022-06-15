@@ -58,6 +58,7 @@ $(function() {
             {x:50, y:80, oldX:0, oldY:0},
         ];
         keyPressed = DOWN;
+        movableFood = {x:-50, y:-50, state:"right", count:0};
     });
 
     function gameLoop() {
