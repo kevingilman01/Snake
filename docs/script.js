@@ -21,7 +21,7 @@ $(function() {
     var score = 0;
     var game;
 
-    game = setInterval(gameLoop, 300);
+    game = setInterval(gameLoop, 100);
 
     function gameLoop() {
         clearCanvas();
