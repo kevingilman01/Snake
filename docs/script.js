@@ -11,6 +11,7 @@ $(function() {
 
     var snakeWidth = snakeHeight = 10;
     var blockSize = 10;
+    var snakeColor;
 
     const LEFT = 37;
     const UP = 38;
@@ -21,7 +22,29 @@ $(function() {
     var score = 0;
     var game;
 
-    game = setInterval(gameLoop, 100);
+    $("#greenButton").on("click", function() {
+        snakeColor = 'green';
+        game = setInterval(gameLoop, 100);
+        $("#selectionMenu").css("display", "none");
+    });
+
+    $("#blueButton").on("click", function() {
+        snakeColor = 'blue';
+        game = setInterval(gameLoop, 100);
+        $("#selectionMenu").css("display", "none");
+    });
+
+    $("#yellowButton").on("click", function() {
+        snakeColor = 'yellow';
+        game = setInterval(gameLoop, 100);
+        $("#selectionMenu").css("display", "none");
+    });
+
+    $("#purpleButton").on("click", function() {
+        snakeColor = 'purple';
+        game = setInterval(gameLoop, 100);
+        $("#selectionMenu").css("display", "none");
+    });
 
     function gameLoop() {
         clearCanvas();
@@ -57,7 +80,7 @@ $(function() {
 
     function drawSnake() {
         $.each(snake, function(index, value) {
-            ctx.fillStyle = 'green';
+            ctx.fillStyle = snakeColor;
             ctx.fillRect(value.x, value.y, snakeWidth, snakeHeight);
             ctx.strokeStyle = 'white';
             ctx.strokeRect(value.x, value.y, snakeWidth, snakeHeight);

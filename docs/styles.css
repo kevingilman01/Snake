@@ -5,3 +5,23 @@
 #canvas {
     background-color: black;
 }
+
+#greenButton {
+    background-color: green;
+    font-weight: 900;
+}
+
+#blueButton {
+    background-color: blue;
+    font-weight: 900;
+}
+
+#yellowButton {
+    background-color: yellow;
+    font-weight: 900;
+}
+
+#purpleButton {
+    background-color: purple;
+    font-weight: 900;
+}
