@@ -8,6 +8,7 @@ $(function() {
         {x:50, y:80, oldX:0, oldY:0},
     ];
     var food = {x:100, y:100, eaten:false};
+    movableFood = {x:-50, y:-50, state:"right", count:0};
 
     var snakeWidth = snakeHeight = 10;
     var blockSize = 10;
@@ -19,7 +20,7 @@ $(function() {
     const DOWN = 40;
 
     var keyPressed = DOWN;
-    var score = 0;
+    var score = 9;
     var game;
 
     $("#greenButton").on("click", function() {
@@ -61,7 +62,12 @@ $(function() {
 
     function gameLoop() {
         clearCanvas();
-        drawFood();
+        if (score % 10 == 0 && score != 0) {
+            drawMovableFood();
+        }
+        else {
+            drawFood();
+        }
         moveSnake();
         drawSnake();
     }
@@ -107,6 +113,16 @@ $(function() {
                     increaseSnakeSize();
                     food.eaten = true;
                 }
+                if (eatMovableFood(value.x,value.y,snake[1].x,snake[1].y)) {
+                    score+=5;
+                    $("#score").text(score);
+                    increaseSnakeSize();
+                    increaseSnakeSize();
+                    increaseSnakeSize();
+                    increaseSnakeSize();
+                    increaseSnakeSize();
+                    movableFood = {x:-50, y:-50, state:"right", count:0};
+                }
             }
         });
     }
@@ -116,6 +132,10 @@ $(function() {
             x: snake[snake.length - 1].oldX,
             y: snake[snake.length - 1].oldY
         })
+        if (score % 10 == 0 && score != 0) {
+            movableFood = getNewPositionForFood();
+            console.log(movableFood);
+        }
     }
 
     function collide(x, y) {
@@ -132,8 +152,49 @@ $(function() {
         ctx.fillRect(food.x, food.y, snakeWidth, snakeHeight);
     }
 
+    function drawMovableFood() {
+        ctx.fillStyle = 'gold';
+        if(movableFood.state == "right") {
+            movableFood.x += blockSize;
+            movableFood.count++
+            if(movableFood.count == 4) {
+                movableFood.state = "down";
+                movableFood.count = 0;
+            }
+        }
+        else if(movableFood.state == "down") {
+            movableFood.y += blockSize;
+            movableFood.count++
+            if(movableFood.count == 4) {
+                movableFood.state = "left";
+                movableFood.count = 0;
+            }
+        }
+        else if(movableFood.state == "left") {
+            movableFood.x -= blockSize;
+            movableFood.count++
+            if(movableFood.count == 4) {
+                movableFood.state = "up";
+                movableFood.count = 0;
+            }
+        }
+        else if(movableFood.state == "up") {
+            movableFood.y -= blockSize;
+            movableFood.count++
+            if(movableFood.count == 4) {
+                movableFood.state = "right";
+                movableFood.count = 0;
+            }
+        }
+        ctx.fillRect(movableFood.x, movableFood.y, snakeWidth, snakeHeight);
+    }
+
     function eatFood(x, y) {
         return food.x == x && food.y == y;
+    }
+
+    function eatMovableFood(x, y, x2, y2) {
+        return (movableFood.x == x && movableFood.y == y) || (movableFood.x == x2 && movableFood.y == y2);
     }
 
     function getRandomNumber(max, multipleOf) {
@@ -179,7 +240,12 @@ $(function() {
                 yArr.push(value.y);
             }
         })
-        xy = getEmptyXY(xArr, yArr);
+        if (score % 10 == 0 && score != 0) {
+            xy = getEmptyXY2(xArr, yArr);
+        }
+        else {
+            xy = getEmptyXY(xArr, yArr);
+        }
         return xy;
     }
 
@@ -187,7 +253,7 @@ $(function() {
         let newX, newY;
         newX = getRandomNumber(canvas.width - 10, 10);
         newY = getRandomNumber(canvas.height - 10, 10);
-        if ($.inArray(newX,xArr) == -1 && $.inArray(newY,yArr) != -1) {
+        if ($.inArray(newX,xArr) == -1 && $.inArray(newY,yArr) == -1) {
             return {
                 x: newX,
                 y: newY,
@@ -196,6 +262,23 @@ $(function() {
         }
         else {
             return getEmptyXY(xArr, yArr);
+        }
+    }
+
+    function getEmptyXY2(xArr, yArr) {
+        let newX, newY;
+        newX = getRandomNumber(canvas.width - 70, 10);
+        newY = getRandomNumber(canvas.height - 70, 10);
+        if ($.inArray(newX,xArr) == -1 && $.inArray(newY,yArr) == -1) {
+            return {
+                x: newX,
+                y: newY,
+                state: "right",
+                count:0,
+            }
+        }
+        else {
+            return getEmptyXY2(xArr, yArr);
         }
     }
 
