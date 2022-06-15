@@ -20,7 +20,7 @@ $(function() {
     const DOWN = 40;
 
     var keyPressed = DOWN;
-    var score = 9;
+    var score = 0;
     var game;
 
     $("#greenButton").on("click", function() {
