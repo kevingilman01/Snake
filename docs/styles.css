@@ -29,3 +29,16 @@
 #gameOverScreen {
     display: none;
 }
+
+#highScores {
+    display: none;
+    font-weight: 700;
+}
+
+.scores {
+    font-weight: 700;
+}
+
+#score1 {
+    font-weight: 700;
+}

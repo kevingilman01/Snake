@@ -30,7 +30,8 @@ $(function() {
     var konamiCodePos = 0;
     var cheats = false;
     var rainbow = ["red", "orange", "yellow", "green", "blue", "indigo", "violet"];
-    var rainbowIndex = 0;
+    
+    var highScores = [0,0,0,0,0];
 
     $("#greenButton").on("click", function() {
         snakeColor = 'green';
@@ -61,6 +62,7 @@ $(function() {
             $("#selectionMenu").css("display", "block");
         }
         $("#gameOverScreen").css("display", "none");
+        $("#highScores").css("display", "none");
         score = 0;
         $("#score").text(score);
         snake = [
@@ -321,5 +323,18 @@ $(function() {
     function gameOver() {
         clearInterval(game);
         $("#gameOverScreen").css("display", "block");
+        for(var i = 0; i < 5; i++) {
+            if(score > highScores[i]) {
+                highScores.pop();
+                highScores.splice(i, 0, score);
+                break;
+            }
+        }
+        $("#score1").html(highScores[0]);
+        $("#score2").html(highScores[1]);
+        $("#score3").html(highScores[2]);
+        $("#score4").html(highScores[3]);
+        $("#score5").html(highScores[4]);
+        $("#highScores").css("display", "block");
     }
 })
