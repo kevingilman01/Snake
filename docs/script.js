@@ -3,9 +3,9 @@ $(function() {
     var ctx = canvas.getContext('2d');
 
     var snake = [
-        {x:50, y:100, oldX:0, oldY:0},
-        {x:50, y:90, oldX:0, oldY:0},
-        {x:50, y:80, oldX:0, oldY:0},
+        {x:200, y:100, oldX:0, oldY:0},
+        {x:200, y:90, oldX:0, oldY:0},
+        {x:200, y:80, oldX:0, oldY:0},
     ];
     var food = {x:100, y:100, eaten:false};
     movableFood = {x:-50, y:-50, state:"right", count:0};
@@ -18,10 +18,19 @@ $(function() {
     const UP = 38;
     const RIGHT = 39;
     const DOWN = 40;
+    const a = 65;
+    const b = 66;
+    const ENTER = 13;
 
     var keyPressed = DOWN;
     var score = 0;
     var game;
+
+    var konamiCode = [UP, UP, DOWN, DOWN, LEFT, RIGHT, LEFT, RIGHT, b, a, ENTER];
+    var konamiCodePos = 0;
+    var cheats = false;
+    var rainbow = ["red", "orange", "yellow", "green", "blue", "indigo", "violet"];
+    var rainbowIndex = 0;
 
     $("#greenButton").on("click", function() {
         snakeColor = 'green';
@@ -48,17 +57,22 @@ $(function() {
     });
 
     $("#playAgainButton").on("click", function() {
-        $("#selectionMenu").css("display", "block");
+        if (cheats == false) {
+            $("#selectionMenu").css("display", "block");
+        }
         $("#gameOverScreen").css("display", "none");
         score = 0;
         $("#score").text(score);
         snake = [
-            {x:50, y:100, oldX:0, oldY:0},
-            {x:50, y:90, oldX:0, oldY:0},
-            {x:50, y:80, oldX:0, oldY:0},
+            {x:200, y:100, oldX:0, oldY:0},
+            {x:200, y:90, oldX:0, oldY:0},
+            {x:200, y:80, oldX:0, oldY:0},
         ];
         keyPressed = DOWN;
         movableFood = {x:-50, y:-50, state:"right", count:0};
+        if (cheats == true) {
+            game = setInterval(gameLoop, 100);
+        }
     });
 
     function gameLoop() {
@@ -100,7 +114,12 @@ $(function() {
 
     function drawSnake() {
         $.each(snake, function(index, value) {
-            ctx.fillStyle = snakeColor;
+            if (cheats == true) {
+                ctx.fillStyle = rainbow[index % 7];
+            }
+            else {
+                ctx.fillStyle = snakeColor;
+            }
             ctx.fillRect(value.x, value.y, snakeWidth, snakeHeight);
             ctx.strokeStyle = 'white';
             ctx.strokeRect(value.x, value.y, snakeWidth, snakeHeight);
@@ -135,7 +154,6 @@ $(function() {
         })
         if (score % 10 == 0 && score != 0) {
             movableFood = getNewPositionForFood();
-            console.log(movableFood);
         }
     }
 
@@ -212,6 +230,9 @@ $(function() {
         if ($.inArray(e.keyCode, [DOWN, UP, LEFT, RIGHT]) != -1) {
             keyPressed = checkKeyIsAllowed(e.keyCode);
         }
+        if (score == 0 && $.inArray(e.keyCode, [DOWN, UP, LEFT, RIGHT, a, b, ENTER]) != -1) {
+            checkKonamiCode(e.keyCode);
+        }
     })
 
     function checkKeyIsAllowed(tempKey) {
@@ -229,6 +250,20 @@ $(function() {
             key = (keyPressed != RIGHT) ? tempKey : keyPressed;
         }
         return key;
+    }
+
+    function checkKonamiCode(keyEntered) {
+        if (keyEntered == konamiCode[konamiCodePos]) {
+            konamiCodePos++;
+        }
+        else {
+            konamiCodePos = 0;
+        }
+        if (konamiCodePos == konamiCode.length) {
+            cheats = true;
+            game = setInterval(gameLoop, 100);
+            $("#selectionMenu").css("display", "none");
+        }
     }
 
     function getNewPositionForFood() {
