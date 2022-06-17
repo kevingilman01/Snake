@@ -31,7 +31,9 @@ $(function() {
     var cheats = false;
     var rainbow = ["red", "orange", "yellow", "green", "blue", "indigo", "violet"];
     
-    var highScores = [0,0,0,0,0];
+    const HIGH_SCORES = "highScores";
+    const highScoreString = localStorage.getItem(HIGH_SCORES);
+    const highScores = JSON.parse(highScoreString) ?? [];
 
     $("#greenButton").on("click", function() {
         snakeColor = 'green';
@@ -324,17 +326,24 @@ $(function() {
         clearInterval(game);
         $("#gameOverScreen").css("display", "block");
         for(var i = 0; i < 5; i++) {
-            if(score > highScores[i]) {
+            if(score > highScores[i] && highScores.length == 5) {
                 highScores.pop();
                 highScores.splice(i, 0, score);
                 break;
             }
+        }
+        if(highScores.length < 5) {
+            highScores.push(score);
+            highScores.sort(function(a,b) {
+                return b-a;
+            })
         }
         $("#score1").html(highScores[0]);
         $("#score2").html(highScores[1]);
         $("#score3").html(highScores[2]);
         $("#score4").html(highScores[3]);
         $("#score5").html(highScores[4]);
+        localStorage.setItem(HIGH_SCORES, JSON.stringify(highScores));
         $("#highScores").css("display", "block");
     }
 })
