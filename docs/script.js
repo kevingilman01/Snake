@@ -30,6 +30,10 @@ $(function() {
     var konamiCodePos = 0;
     var cheats = false;
     var rainbow = ["red", "orange", "yellow", "green", "blue", "indigo", "violet"];
+
+    var pinkCode = [48, 57, 49, 53, 50, 49, 13];
+    pinkCodePos = 0;
+    cheatsPink = false;
     
     const HIGH_SCORES = "highScores";
     const highScoreString = localStorage.getItem(HIGH_SCORES);
@@ -120,6 +124,9 @@ $(function() {
         $.each(snake, function(index, value) {
             if (cheats == true) {
                 ctx.fillStyle = rainbow[index % 7];
+            }
+            else if (cheatsPink == true) {
+                ctx.fillStyle = "pink";
             }
             else {
                 ctx.fillStyle = snakeColor;
@@ -237,6 +244,9 @@ $(function() {
         if (score == 0 && $.inArray(e.keyCode, [DOWN, UP, LEFT, RIGHT, a, b, ENTER]) != -1) {
             checkKonamiCode(e.keyCode);
         }
+        if (score == 0 && $.inArray(e.keyCode, [48, 57, 53, 50, 49, 13]) != -1) {
+            checkPinkCode(e.keyCode);
+        }
     })
 
     function checkKeyIsAllowed(tempKey) {
@@ -265,6 +275,20 @@ $(function() {
         }
         if (konamiCodePos == konamiCode.length) {
             cheats = true;
+            game = setInterval(gameLoop, 100);
+            $("#selectionMenu").css("display", "none");
+        }
+    }
+
+    function checkPinkCode(keyEntered) {
+        if (keyEntered == pinkCode[pinkCodePos]) {
+            pinkCodePos++;
+        }
+        else {
+            pinkCodePos = 0;
+        }
+        if (pinkCodePos == pinkCode.length) {
+            cheatsPink = true;
             game = setInterval(gameLoop, 100);
             $("#selectionMenu").css("display", "none");
         }
